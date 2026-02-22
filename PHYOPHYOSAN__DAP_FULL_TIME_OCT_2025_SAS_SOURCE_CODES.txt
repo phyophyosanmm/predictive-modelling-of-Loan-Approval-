@@ -1,0 +1,1522 @@
+/*****************************************************8
+Developer name: Phyo Phyo San
+Job position: Data Science 
+Program name: my_dap_project_tp089085.sas
+Description: -1-2 lines
+Data first written: Tue,11-Nov-2025
+Date last update:  Tue,17-DEC-2025
+Folder name: DAP_FT_SEP_2025_PROJECT
+Library name:LIB08908 (SAS permanent library)
+*********************************************************/
+
+/* 4.3.1 Extract the training dataset's metadata and data dictionary*/
+
+PROC CONTENTS DATA = LIB08908.TRAINING_DS;
+
+RUN;
+
+/* 6.1.1 Univariate Analysis of the Categorical Variable - marital_status */
+
+TITLE 'Univariate Analysis of the Categorical Variable - marital_status';
+FOOTNOTE '-----End------';
+
+PROC FREQ DATA = LIB08908.TRAINING_DS;
+
+TABLE marital_status;dictionary
+
+RUN;
+
+/* 6.1.2 Univariate Analysis of the Categorical Variable - employment */
+
+TITLE 'Univariate Analysis of the Categorical Variable - epmloyment';
+FOOTNOTE '-----End------';
+
+PROC FREQ DATA = LIB08908.TRAINING_DS;
+TABLE employment;
+
+RUN;
+
+/* 6.1.3 Univariate Analysis of the Categorical Variable - loan_location */
+
+TITLE 'Univariate Analysis of the Categorical Variable - loan_location';
+FOOTNOTE '-----End------';
+
+PROC FREQ DATA = LIB08908.TRAINING_DS;
+
+TABLE loan_location;
+
+RUN;
+ 
+/* 6.2.1 Univariate Analysis of the Continuous variable - loan_amount */
+
+TITLE 'Univariate Analysis of the Continuous variable - loan_amount';
+FOOTNOTE '-----END-----';
+
+PROC MEANS DATA = LIB08908.TRAINING_DS N NMISS MIN MAX MEAN MEDIAN STD;
+VAR loan_amount;
+
+RUN;
+
+/* 6.2.2 Univariate Analysis of the Continuous Variable –  candidate_income*/
+
+TITLE 'Univariate Analysis of the Continuous Variable –  candidate_income';
+FOOTNOTE '-----END-----';
+
+PROC MEANS DATA = LIB08908.TRAINING_DS N NMISS MIN MAX MEAN MEDIAN STD;
+
+VAR candidate_income;
+
+RUN;
+
+/* 6.2.3 Univariate Analysis of the Continuous Variable –  loan_duration*/
+
+TITLE 'Univariate Analysis of the Continuous Variable –  loan_duration';
+FOOTNOTE '-----END-----';
+
+PROC MEANS DATA = LIB08908.TRAINING_DS N NMISS MIN MAX MEAN MEDIAN STD;
+
+VAR loan_duration;
+
+RUN;
+
+
+/* 6.3.1 Bivariate Analysis of the variables - (Categorical-gender vs Categorical-loan_location) */
+
+TITLE1 'Bivariate Analysis of the variables';
+TITLE2 '(Categorical-gender vs Categorical-loan_location)';
+
+PROC FREQ DATA = LIB08908.TRAINING_DS;
+
+TABLE gender * loan_location/
+Plots= FREQPLOT (TWOWAY = STACKED SCALE = GROUPPCT);
+
+RUN;
+
+/* 6.3.2 Bivariate Analysis of the variables - (Categorical-marital_status vs Categorical-loan_approval_status) */
+
+TITLE1 'Bivariate Analysis of the variables';
+TITLE2 '(Categorical-marital_status vs Categorical-loan_approval_status)';
+
+PROC FREQ DATA = LIB08908.TRAINING_DS;
+
+TABLE marital_status * loan_approval_status /
+Plots= FREQPLOT (TWOWAY = STACKED SCALE = GROUPPCT);
+
+RUN;
+
+/* 6.3.3 Bivariate Analysis of the variables - (Categorical-employment vs Categorical-loan_approval_status ) */
+
+TITLE1 'Bivariate Analysis of the variables';
+TITLE2 '(Categorical-employment vs Categorical-loan_approval_status )';
+
+PROC FREQ DATA = LIB08908.TRAINING_DS;
+
+TABLE  employment * loan_approval_status /
+Plots= FREQPLOT (TWOWAY = STACKED SCALE = GROUPPCT);
+
+RUN;
+
+
+/* 6.4.1 Bivariate Analysis of the Variables (Categorical (gender) vs Continuous(loan_amount) */
+
+TITLE1 'Bivariate Analysis of the Variables';
+TITLE2 '(Categorical-gender vs Continuous-loan_amount)';
+
+PROC MEANS DATA = LIB08908.TRAINING_DS;
+
+CLASS gender; /* This is a Categorical variable*/
+VAR loan_amount; /* This is a Numeric/Continuous variable */
+
+RUN;
+
+/* 6.4.2 Bivariate Analysis of the Variables (Categorical (employment) vs Continuous (candidate_income) */
+
+TITLE1 'Bivariate Analysis of the Variables';
+TITLE2 '(Categorical-employment vs Continuous-candidate_income)';
+
+PROC MEANS DATA = LIB08908.TRAINING_DS;
+
+CLASS employment; /* This is a Categorical variable*/
+VAR candidate_income; /* This is a Numeric/Continuous variable */
+
+RUN;
+
+/* 6.4.3 Bivariate Analysis of the Variables (Categorical (qualification) vs Continuous (guarantee_income) */
+
+TITLE1 'Bivariate Analysis of the Variables';
+TITLE2 '(Categorical-qualification vs Continuous-guarantee_income)';
+
+PROC MEANS DATA = LIB08908.TRAINING_DS;
+
+CLASS qualification; /* This is a Categorical variable*/
+VAR guarantee_income; /* This is a Numeric/Continuous variable */
+
+RUN;
+
+/*SAS MACRO*/
+
+/* 6.5.1 Univariate Analysis of the Categorical Variable using SAS MACRO */
+
+/* SAS MACRO Begins here */
+OPTIONS MCOMPILENOTE =ALL;
+%MACRO MACRO_UVA_CATE_VARI(ptitle, pds_name,pcate_name);
+TITLE &ptitle;
+FOOTNOTE '-----End------';
+
+PROC FREQ DATA = &pds_name;
+TABLE &pcate_name/;
+
+RUN;
+
+%MEND MACRO_UVA_CATE_VARI;
+/* SAS MACRI Ends here */
+
+/*Call SAS MACRO - MACRO_UVA_CATE_VARI */
+%MACRO_UVA_CATE_VARI('Univariate Analysisiof the Categorical Variables - loan_location', 
+LIB08908.TESTING_DS,loan_location);
+
+%MACRO_UVA_CATE_VARI('Univariate Analysisiof the Categorical Variables - loan_history', 
+LIB08908.TESTING_DS,loan_history);
+
+%MACRO_UVA_CATE_VARI('Univariate Analysisiof the Categorical Variables - gender', 
+LIB08908.TESTING_DS,gender);
+
+%MACRO_UVA_CATE_VARI('Univariate Analysisiof the Categorical Variables - marital_status', 
+LIB08908.TESTING_DS,marital_status);
+
+%MACRO_UVA_CATE_VARI('Univariate Analysisiof the Categorical Variables - family_member', 
+LIB08908.TESTING_DS,family_members);
+
+/*6.6.1 Univariate Analysis of the Continuous variable using the SAS MACRO*/
+
+/* SAS MACRI begins here */
+OPTIONS MCOMPILENOTE=ALL;
+%MACRO MACRO_UVA_CONTI_VARI(ptitle,pds_name,pconti_name);
+TITLE &ptitle;
+FOOTNOTE '----END-----';
+
+PROC MEANS DATA = &pds_name N NMISS MIN MAX MEAN MEDIAN STD;
+
+VAR &pconti_name;
+
+RUN;
+
+%MEND MACRO_UVA_CONTI_VARI;
+/* SAS MACRI Ends here */
+
+/* Call the SAS MACRI - MACRO_USA_CONTI_VARI */
+%MACRO_UVA_CONTI_VARI('Univariate Analysis of the Continuous Variable - candidate_income',
+LIB08908.TESTING_DS,candidate_income);
+
+%MACRO_UVA_CONTI_VARI('Univariate Analysis of the Continuous Variable - loan_duration',
+LIB08908.TESTING_DS,loan_duration);
+
+%MACRO_UVA_CONTI_VARI('Univariate Analysis of the Continuous Variable - GUARANTEE_INCOME',
+LIB08908.TESTING_DS,GUARANTEE_INCOME);
+
+%MACRO_UVA_CONTI_VARI('Univariate Analysis of the Continuous Variable - loan_amount',
+LIB08908.TESTING_DS,loan_amount);
+
+/* 6.7.1 Bivariate Analysis of the variables - (Categorical vs Categorical) using SAS MACRO */
+
+/* SAS MACRO Begins */
+OPTIONS MCOMPILENOTE=ALL;
+%MACRO MACRO_BVA_CATE_CATE(ptitle1,ptitle2,pds_name,pcate_vari1,pcate_vari2);
+TITLE1 &ptitle1;
+TITLE2 &ptitle2;
+
+PROC FREQ DATA= &pds_name;
+
+TABLE &pcate_vari1 * &pcate_vari2/
+PLOTS = FREQPLOT (TWOWAY = STACKED SCALE = GROUPPCT );
+
+RUN;
+
+%MEND MACRO_BVA_CATE_CATE;
+/* SAS MACRO Ends */
+
+/* Call the SAS MACRI - MACRO_USA_CONTI_VARI */
+%MACRO_BVA_CATE_CATE('Bivariate Analysis of the Variables :',
+'Categorical (marital_status) vs Categorical(loan_location) ',
+LIB08908.TESTING_DS,
+marital_status,
+loan_location);
+
+%MACRO_BVA_CATE_CATE('Bivariate Analysis of the Variables :',
+'Categorical (loan_location) vs Categorical (gender)',
+LIB08908.TESTING_DS,
+loan_location,
+gender);
+
+%MACRO_BVA_CATE_CATE('Bivariate Analysis of the Variables :',
+'Categorical(family_members) vs Categorical(marital_status)',
+LIB08908.TESTING_DS,
+family_members,
+marital_status);
+
+
+/* 6.8.1 Bivariate Analysis of the Variables (Categorical (gender) vs Continuous(loan_amount) using SAS MACRO*/
+
+/*SAS MACRO Begins here */
+OPTIONS MCOMPILENOTE=ALL;
+%MACRO MACRO_BVACATE_CONTI(ptitle1, ptitle2, pds_name, pcate_name, pconti_name);
+TITLE1 &ptitle1;
+TITLE2 &ptitle2;
+
+PROC MEANS DATA = &pds_name;
+
+CLASS &pcate_name; /* This is a Categorical variable*/
+VAR &pconti_name; /* This is a Numeric/Continuous variable */
+
+RUN;
+%MEND MACRO_BVACATE_CONTI;
+/* SAS MACRO Ends */
+
+/*Call the MACRO - MACRO_BVACATE_CONTI */
+%MACRO_BVACATE_CONTI('Bivariate analysis of the Variables :',
+'Categorical(loan_location) vs Continuous(guarantee_income)',
+LIB08908.TESTING_DS,
+loan_location,
+guarantee_income);
+
+%MACRO_BVACATE_CONTI('Bivariate analysis of the Variables :',
+'Categorical(employment) vsContinuous (loan_duration) ',
+LIB08908.TESTING_DS,
+employment,
+loan_duration);
+
+%MACRO_BVACATE_CONTI('Bivariate analysis of the Variables :',
+'Categorical(qualification) vs Continuous(candidate_income)',
+LIB08908.TESTING_DS,
+qualification,
+candidate_income);
+
+/*7.1.1 Impute the missing value found in the Categorical variables – marital_status */
+
+/* STEP 1: Find the details of the loan applications who submitted their 
+loan application without stating their marital_status details */
+TITLE1 'Find the details of the loan applications who submitted their loan';
+TITLE2 'application without stating their marital_status details';
+FOOTNOTE '------END------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.marital_status eq '' OR t.marital_status IS MISSING );
+
+QUIT;
+
+/* STEP 2: Count the total number of the loan applicants who submitted their 
+loan application without stating their marital_status details */
+TITLE1 'Count the total number of the loan applications who submitted their loan';
+TITLE2 'application without stating their marital_status details';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.marital_status eq '' OR t.marital_status IS MISSING );
+
+QUIT;
+
+/* STEP 3: Find the statistics on marital_status and save the statistics in a temporary dataset -LIB08908.STAT_MS_DS */
+PROC SQL;
+
+CREATE TABLE LIB08908.STAT_MS_DS AS
+SELECT t.marital_status AS marital_status, 
+				COUNT(*) AS number_of_loan_applicants
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.marital_status ne '' OR t.marital_status IS NOT MISSING )
+GROUP BY t.marital_status;
+
+QUIT;
+
+/*STEP 4: Find the highest count and MoD value*/
+PROC SQL;
+
+SELECT to.marital_status AS marital_status
+FROM LIB08908.STAT_MS_DS to
+WHERE to.number_of_loan_applicants eq ( SELECT MAX(ti.number_of_loan_applicants) AS highest_count
+  									    FROM LIB08908.STAT_MS_DS ti );
+  									    /*The above sub-program finds the highest count (number of applicants who got married) */
+  									   
+QUIT;
+
+/*STEP 4-1: Make a backup copy */ 
+
+PROC SQL;
+
+CREATE TABLE LIB08908.TRAINING_BK_DS AS
+SELECT *
+FROM LIB08908.TRAINING_DS;
+ 					   
+QUIT;
+
+/*STEP 4-2: Impute the missing values found in the Categorical variable - marital_status*/
+PROC SQL;
+
+UPDATE LIB08908.TRAINING_DS
+SET marital_status = ( SELECT to.marital_status AS marital_status
+					   FROM LIB08908.STAT_MS_DS to
+					   WHERE to.number_of_loan_applicants eq ( SELECT MAX(ti.number_of_loan_applicants) AS highest_count
+  									    					   FROM LIB08908.STAT_MS_DS ti ))
+  									    					   /*The above sub-program finds the highest count 
+  									    					   (number of applicants who got married) */
+WHERE ( marital_status eq '' OR marital_status IS MISSING );  									    						
+  									   
+QUIT;
+
+/* STEP 4-3: (AI) Find the details of the loan applications who submitted their 
+loan application without stating their marital_status details */
+TITLE1 'Find the details of the loan applications who submitted their loan';
+TITLE2 'application without stating their marital_status details';
+FOOTNOTE '------END------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.marital_status eq '' OR t.marital_status IS MISSING );
+
+QUIT;
+
+/* STEP 4-4: (AI) Count the total number of the loan applicants who submitted their 
+loan application without stating their marital_status details */
+TITLE1 'Count the total number of the loan applications who submitted their loan';
+TITLE2 'application without stating their marital_status details';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.marital_status eq '' OR t.marital_status IS MISSING );
+QUIT;
+
+
+/*7.1.2 Impute the missing value found in the Categorical variables – gender */
+
+/* STEP 1: Find the details of the loan applications who submitted their 
+loan application without providing gender information. */
+TITLE1 'Find the details of the loan applications who submitted their loan';
+TITLE2 'application without stating their gender details';
+FOOTNOTE '------END------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.gender eq '' OR t.gender IS MISSING );
+
+QUIT;
+
+/* STEP 2: Count the total number of the loan applicants who submitted their 
+loan application without providing gender information. */
+TITLE1 'Count the total number of the loan applications who submitted their loan';
+TITLE2 'application without providing gender information.';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.gender eq '' OR t.gender IS MISSING );
+QUIT;
+
+/* STEP 3: Find the statistics on gender and save the statistics in a temporary dataset -LIB08908.STAT_MS_DS */
+PROC SQL;
+
+CREATE TABLE LIB08908.STAT_MS_DS AS
+SELECT t.gender AS gender, 
+				COUNT(*) AS number_of_loan_applicants
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.gender ne '' OR t.gender IS NOT MISSING )
+GROUP BY t.gender;
+
+QUIT;
+
+/*STEP 4: Find the highest count and MoD value*/
+PROC SQL;
+
+SELECT to.gender AS gender
+FROM LIB08908.STAT_MS_DS to
+WHERE to.number_of_loan_applicants eq ( SELECT MAX(ti.number_of_loan_applicants) AS highest_count
+  									    FROM LIB08908.STAT_MS_DS ti );
+  									    /*The above sub-program identifies which gender has the highest number of applicants*/
+  									   
+QUIT;
+
+/*STEP 4-1: Impute the missing values found in the Categorical variable - gender*/
+PROC SQL;
+
+UPDATE LIB08908.TRAINING_DS
+SET gender = ( SELECT to.gender AS gender
+					   FROM LIB08908.STAT_MS_DS to
+					   WHERE to.number_of_loan_applicants eq ( SELECT MAX(ti.number_of_loan_applicants) AS highest_count
+  									    					   FROM LIB08908.STAT_MS_DS ti ))
+  									    					   /*The above sub-program identifies which gender has the highest
+  									    					   number of applicants. */
+WHERE ( gender eq '' OR gender IS MISSING );  									    						
+  									   
+QUIT;
+
+/* STEP 4-2: (AI) Find the details of the loan applications who submitted their 
+loan application without providing gender information. */
+TITLE1 'Find the details of the loan applications who submitted their loan';
+TITLE2 'application without providing gender information.';
+FOOTNOTE '------END------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.gender eq '' OR t.gender IS MISSING );
+
+QUIT;
+
+/* STEP 4-3: (AI) Count the total number of the loan applicants who submitted their 
+loan application without providing gender information. */
+TITLE1 'Count the total number of the loan applications who submitted their loan';
+TITLE2 'application without providing gender information.';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.gender eq '' OR t.gender IS MISSING );
+
+QUIT;
+
+/*7.1.3 Impute the missing value found in the Categorical variables – employment */
+
+/* STEP 1: Find the details of the loan applications who submitted their 
+loan application without providing any employment information. */
+TITLE1 'Find the details of the loan applications who submitted their loan';
+TITLE2 'application without providing any employment information';
+FOOTNOTE '------END------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.employment eq '' OR t.employment IS MISSING );
+
+QUIT;
+
+/* STEP 2: Count the total number of the loan applicants who submitted their 
+loan application without providing any employment information. */
+TITLE1 'Count the total number of the loan applications who submitted their loan';
+TITLE2 'application without providing any employment information.';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.employment eq '' OR t.employment IS MISSING );
+
+QUIT;
+
+/* STEP 3: Find the statistics on employment and save the statistics in a temporary dataset -LIB08908.STAT_MS_DS */
+PROC SQL;
+
+CREATE TABLE LIB08908.STAT_MS_DS AS
+SELECT t.employment AS employment, 
+				COUNT(*) AS number_of_loan_applicants
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.employment ne '' OR t.employment IS NOT MISSING )
+GROUP BY t.employment;
+
+QUIT;
+
+/*STEP 4: Find the highest count and MoD value*/
+PROC SQL;
+
+SELECT to.employment AS employment
+FROM LIB08908.STAT_MS_DS to
+WHERE to.number_of_loan_applicants eq ( SELECT MAX(ti.number_of_loan_applicants) AS highest_count
+  									    FROM LIB08908.STAT_MS_DS ti );
+  									    /*The above sub-program identifies which employment type has 
+  									    the highest number of applicants*/
+  									   
+QUIT;
+
+/*STEP 4-1: Impute the missing values found in the Categorical variable - employment*/
+PROC SQL;
+
+UPDATE LIB08908.TRAINING_DS
+SET employment = ( SELECT to.employment AS employment
+					   FROM LIB08908.STAT_MS_DS to
+					   WHERE to.number_of_loan_applicants eq ( SELECT MAX(ti.number_of_loan_applicants) AS highest_count
+  									    					   FROM LIB08908.STAT_MS_DS ti ))
+  									    					   /*The above sub-program identifies which employment type has 
+  									    					   the highest number of applicants. */
+WHERE ( employment eq '' OR employment IS MISSING );  									    						
+  									   
+QUIT;
+
+/* STEP 4-2: (AI) Find the details of the loan applications who submitted their 
+loan application without providing any employment information. */
+TITLE1 'Find the details of loan applicants who submitted their loan';
+TITLE2 'applications without providing any employment information.';
+FOOTNOTE '------END------';
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.employment eq '' OR t.employment IS MISSING );
+
+QUIT;
+
+/* STEP 4-3: (AI) Count the total number of loan applicants who submitted their 
+loan application without providing any employment information. */
+TITLE1 'Count the total number of loan applications who submitted their loan';
+TITLE2 'application without providing any employment information.';
+FOOTNOTE '---------END--------';
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TRAINING_DS t 
+WHERE (t.employment eq '' OR t.employment IS MISSING );
+
+QUIT;
+
+
+
+/*7.2 Impute the missing values found in the continuous variables inside the LIB08908.TRAINING_DS*/
+
+/*7.2.1 Impute the missing value found in the continuous variables – loan_amount */
+
+/*STEP 1: Find the details of the loan applicants who submitted 
+their loan application without stating their loan_amount */
+TITLE1 'STEP 1: Find the details of the loan applicants who submitted';
+TITLE2 'their loan application without stating their loan_amount';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TRAINING_DS t
+WHERE ( t.loan_amount eq . OR t.loan_amount IS MISSING );
+
+QUIT;
+
+/*STEP 2: Count the number of applicants who submitted 
+their loan application without stating their loan_amount */
+TITLE1 'STEP 2: Count the number of applicants who submitted';
+TITLE2 'their loan application without stating their loan_amount';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TRAINING_DS t
+WHERE ( t.loan_amount eq . OR t.loan_amount IS MISSING );
+
+QUIT;
+
+/* STEP 3: Impute the missing values found inside the continuous variable - loan_amount */
+
+PROC STDIZE DATA = LIB08908.TRAINING_DS REPONLY
+	METHOD= MEAN OUT = LIB08908.TRAINING_DS;
+	VAR loan_amount;
+	
+QUIT;	
+
+/*STEP 3: Find the details of the loan applicants who submitted 
+their loan application without stating their loan_amount */
+TITLE1 'STEP 3: (AI) Find the details of the loan applicants who submitted';
+TITLE2 'their loan application without stating their loan_amount';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TRAINING_DS t
+WHERE ( t.loan_amount eq . OR t.loan_amount IS MISSING );
+
+QUIT;
+
+/*STEP 4: Count the number of applicants who submitted 
+their loan application without stating their loan_amount */
+TITLE1 'STEP 4: (AI) Count the number of applicants who submitted';
+TITLE2 'their loan application without stating their loan_amount';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TRAINING_DS t
+WHERE ( t.loan_amount eq . OR t.loan_amount IS MISSING );
+
+QUIT;
+
+/*7.2 Impute the missing values found in the continuous variables inside the LIB08908.TRAINING_DS*/
+
+/*7.2.2 Impute the missing value found in the continuous variables – loan-durantion */
+
+/*STEP 1: Find the details of the loan applicants who submitted 
+their loan application without stating their loan_duration */
+TITLE1 'STEP 1: Find the details of the loan applicants who submitted';
+TITLE2 'their loan application without stating their loan_duration';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TRAINING_DS t
+WHERE ( t.loan_duration eq . OR t.loan_duration IS MISSING );
+
+QUIT;
+
+/*STEP 2: Count the number of applicants who submitted 
+their loan application without stating their loan_duration */
+TITLE1 'STEP 2: Count the number of applicants who submitted';
+TITLE2 'their loan application without stating their loan_duration';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TRAINING_DS t
+WHERE ( t.loan_duration eq . OR t.loan_duration IS MISSING );
+
+QUIT;
+
+/* STEP 3: Impute the missing values found inside the continuous variable - loan_duration */
+
+PROC STDIZE DATA = LIB08908.TRAINING_DS REPONLY
+	METHOD= MEAN OUT = LIB08908.TRAINING_DS;
+	VAR loan_duration;
+	
+QUIT;	
+
+/*STEP 3-1: (AI) Find the details of the loan applicants who submitted 
+their loan application without stating their loan_duration */
+TITLE1 'Find the details of the loan applicants who submitted';
+TITLE2 'their loan application without stating their loan_duration';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TRAINING_DS t
+WHERE ( t.loan_duration eq . OR t.loan_duration IS MISSING );
+
+QUIT;
+
+/*STEP 3-2: (AI) Count the number of applicants who submitted 
+their loan application without stating their loan_duration */
+TITLE1 'Count the number of applicants who submitted';
+TITLE2 'their loan application without stating their loan_duration';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TRAINING_DS t
+WHERE ( t.loan_duration eq . OR t.loan_duration IS MISSING );
+
+QUIT;
+
+/*7.2 Impute the missing values found in the continuous variables inside the LIB08908.TRAINING_DS*/
+
+/*7.2.3 Impute the missing value found in the continuous variables – loan_history */
+
+/*STEP 1: Find the details of the loan applicants who submitted 
+their loan application without stating their loan_history */
+TITLE1 'STEP 1: Find the details of the loan applicants who submitted';
+TITLE2 'their loan application without stating their loan_history';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TRAINING_DS t
+WHERE ( t.loan_history eq . OR t.loan_history IS MISSING );
+
+QUIT;
+
+/*STEP 2: Count the number of applicants who submitted 
+their loan application without stating their loan_history */
+TITLE1 'STEP 2: Count the number of applicants who submitted';
+TITLE2 'their loan application without stating their loan_history';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TRAINING_DS t
+WHERE ( t.loan_history eq . OR t.loan_history IS MISSING );
+
+QUIT;
+
+
+/* STEP 3: Impute the missing values found inside the continuous variable - loan_history */
+
+PROC STDIZE DATA = LIB08908.TRAINING_DS REPONLY
+	METHOD= MEAN OUT = LIB08908.TRAINING_DS;
+	VAR loan_history;
+	
+QUIT;	
+
+/*STEP 3-1: (AI) Find the details of the loan applicants who submitted 
+their loan application without stating their loan_history */
+TITLE1 'Find the details of the loan applicants who submitted';
+TITLE2 'their loan application without stating their loan_history';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TRAINING_DS t
+WHERE ( t.loan_duration eq . OR t.loan_duration IS MISSING );
+
+QUIT;
+
+/*STEP 3-2: (AI) Count the number of applicants who submitted 
+their loan application without stating their loan_history */
+TITLE1 'Count the number of applicants who submitted';
+TITLE2 'their loan application without stating their loan_history';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TRAINING_DS t
+WHERE ( t.loan_history eq . OR t.loan_history IS MISSING );
+
+QUIT;
+
+
+/*7.3  Impute the missing values found in the categorical variables of LIB08908.TESTING_DS*/
+
+/*7.3.1 Impute the missing value found in the Categorical variables – family_members */
+
+/* STEP 1: Find the details of the loan applications who submitted by their 
+loan application without providing family_members information. */
+TITLE1 'Find the details of the loan applications who submitted their loan';
+TITLE2 'application without stating their family_members details';
+FOOTNOTE '------END------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TESTING_DS ts 
+WHERE (ts.family_members eq '' OR ts.family_members IS MISSING );
+
+QUIT;
+
+/* STEP 2: Count the total number of the loan applicants who submitted their 
+loan application without providing family_members information. */
+TITLE1 'Count the total number of loan applications who submitted their loan';
+TITLE2 'application without providing family_members information.';
+FOOTNOTE '---------END--------';
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TESTING_DS ts 
+WHERE (ts.family_members eq '' OR ts.family_members IS MISSING );
+
+QUIT;
+
+/* STEP 3: Find the statistics on family_members and save the statistics in a temporary dataset -LIB08908.STAT_MS_TS_DS */
+PROC SQL;
+
+CREATE TABLE LIB08908.STAT_MS_TS_DS AS
+SELECT ts.family_members AS family_members, 
+				COUNT(*) AS number_of_loan_applicants
+FROM LIB08908.TESTING_DS ts  
+WHERE (ts.family_members ne '' OR ts.family_members IS NOT MISSING )
+GROUP BY ts.family_members;
+
+QUIT;
+
+/*STEP 4: Find the highest count and MoD value*/
+PROC SQL;
+
+SELECT to.family_members AS family_members
+FROM LIB08908.STAT_MS_TS_DS to
+WHERE to.number_of_loan_applicants eq ( SELECT MAX(ti.number_of_loan_applicants) AS highest_count
+  									    FROM LIB08908.STAT_MS_TS_DS ti );
+  									    /*The above sub-program identifies which family_members has the highest number of applicants*/
+  									   
+QUIT;
+
+/*STEP 4-1: Make a backup copy */ 
+
+PROC SQL;
+
+CREATE TABLE LIB08908.TESTING_BK_DS AS
+SELECT *
+FROM LIB08908.TESTING_DS;
+ 					   
+QUIT;
+
+/*STEP 4-2: Impute the missing values found in the Categorical variable - family_members*/
+PROC SQL;
+
+UPDATE LIB08908.TESTING_DS
+SET family_members = ( SELECT to.family_members AS family_members
+					   FROM LIB08908.STAT_MS_TS_DS to
+					   WHERE to.number_of_loan_applicants eq ( SELECT MAX(ti.number_of_loan_applicants) AS highest_count
+  									    					   FROM LIB08908.STAT_MS_TS_DS ti ))
+  									    					   /*The above sub-program finds the highest count 
+  									    					   (number of applicants whose family members) */
+WHERE ( family_members eq '' OR family_members IS MISSING );  									    						
+  									   
+QUIT;
+
+/* STEP 4-3: (AI) Find the details of the loan applications who submitted their 
+loan application without stating their family_members details */
+TITLE1 'Find the details of the loan applications who submitted their loan';
+TITLE2 'application without stating their family_members details';
+FOOTNOTE '------END------';
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TESTING_DS ts 
+WHERE (ts.family_members eq '' OR ts.family_members IS MISSING );
+
+QUIT;
+
+/* STEP 4-4: (AI) Count the total number of the loan applicants who submitted their 
+loan application without stating their family_members details */
+TITLE1 'Count the total number of loan applications who submitted their loan';
+TITLE2 'application without stating their family_members details';
+FOOTNOTE '---------END--------';
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TESTING_DS ts 
+WHERE (ts.family_members eq '' OR ts.family_members IS MISSING );
+
+QUIT;
+
+
+/*7.3.2 Impute the missing value found in the Categorical variables – gender */
+
+/* STEP 1: Find the details of the loan applications who submitted by their 
+loan application without providing gender information. */
+TITLE1 'STEP 1: Find the details of the loan applications who submitted their loan';
+TITLE2 'application without stating their gender details';
+FOOTNOTE '------END------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TESTING_DS ts  
+WHERE (ts.gender eq '' OR ts.gender IS MISSING );
+
+QUIT;
+
+/* STEP 2: Count the total number of the loan applicants who submitted their 
+loan application without providing gender information. */
+TITLE1 'STEP 2: Count the total number of the loan applications who submitted their loan';
+TITLE2 'application without providing gender information.';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TESTING_DS ts
+WHERE (ts.gender eq '' OR ts.gender IS MISSING );
+
+QUIT;
+
+/* STEP 3: Find the statistics on gender and save the statistics in a temporary dataset -LIB08908.STAT_MS_TS_DS */
+PROC SQL;
+
+CREATE TABLE LIB08908.STAT_MS_TS_DS AS
+SELECT ts.gender AS gender, 
+				COUNT(*) AS number_of_loan_applicants
+FROM LIB08908.TESTING_DS ts
+WHERE (ts.gender ne '' OR ts.gender IS NOT MISSING )
+GROUP BY ts.gender;
+
+QUIT;
+
+/*STEP 4: Find the highest count and MoD value*/
+PROC SQL;
+
+SELECT to.gender AS gender
+FROM LIB08908.STAT_MS_TS_DS to
+WHERE to.number_of_loan_applicants eq ( SELECT MAX(ti.number_of_loan_applicants) AS highest_count
+  									    FROM LIB08908.STAT_MS_TS_DS ti );
+  									    /*The above sub-program identifies which gender has the highest number of applicants*/
+  									   
+QUIT;
+
+/*STEP 4-1: Impute the missing values found in the Categorical variable - gender*/
+PROC SQL;
+
+UPDATE LIB08908.TESTING_DS
+SET gender = ( SELECT to.gender AS gender
+					   FROM LIB08908.STAT_MS_TS_DS to
+					   WHERE to.number_of_loan_applicants eq ( SELECT MAX(ti.number_of_loan_applicants) AS highest_count
+  									    					   FROM LIB08908.STAT_MS_TS_DS ti ))
+  									    					   /*The above sub-program identifies which gender has the highest
+  									    					   number of applicants. */
+WHERE ( gender eq '' OR gender IS MISSING );  									    						
+  									   
+QUIT;
+
+/* STEP 4-2: (AI) Find the details of the loan applications who submitted their 
+loan application without providing gender information. */
+TITLE1 'Find the details of the loan applications who submitted their loan';
+TITLE2 'application without providing gender information.';
+FOOTNOTE '------END------';
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TESTING_DS ts 
+WHERE (ts.gender eq '' OR ts.gender IS MISSING );
+
+QUIT;
+
+/* STEP 4-3: (AI) Count the total number of the loan applicants who submitted their 
+loan application without providing gender information. */
+TITLE1 'Count the total number of the loan applications who submitted their loan';
+TITLE2 'application without providing gender information.';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TESTING_DS ts
+WHERE (ts.gender eq '' OR ts.gender IS MISSING );
+
+QUIT;
+
+/*7.1.3 Impute the missing value found in the Categorical variables – employment */
+
+/* STEP 1: Find the details of the loan applications who submitted their 
+loan application without providing any employment information. */
+TITLE1 'Find the details of the loan applications who submitted their loan';
+TITLE2 'application without providing any employment information';
+FOOTNOTE '------END------';
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TESTING_DS ts
+WHERE (ts.employment eq '' OR ts.employment IS MISSING );
+
+QUIT;
+
+/* STEP 2: Count the total number of the loan applicants who submitted their 
+loan application without providing any employment information. */
+TITLE1 'Count the total number of the loan applications who submitted their loan';
+TITLE2 'application without providing any employment information.';
+FOOTNOTE '---------END--------';
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TESTING_DS ts 
+WHERE (ts.employment eq '' OR ts.employment IS MISSING );
+
+QUIT;
+
+/* STEP 3: Find the statistics on employment and save the statistics in a temporary dataset -LIB08908.STAT_MS_TS_DS */
+PROC SQL;
+
+CREATE TABLE LIB08908.STAT_MS_TS_DS AS
+SELECT ts.employment AS employment, 
+				COUNT(*) AS number_of_loan_applicants
+FROM LIB08908.TESTING_DS ts 
+WHERE (ts.employment ne '' OR ts.employment IS NOT MISSING )
+GROUP BY ts.employment;
+
+QUIT;
+
+/*STEP 4: Find the highest count and MoD value*/
+PROC SQL;
+
+SELECT to.employment AS employment
+FROM LIB08908.STAT_MS_TS_DS to
+WHERE to.number_of_loan_applicants eq ( SELECT MAX(ti.number_of_loan_applicants) AS highest_count
+  									    FROM LIB08908.STAT_MS_TS_DS ti );
+  									    /*The above sub-program identifies which employment type has 
+  									    the highest number of applicants*/
+  									   
+QUIT;
+
+/*STEP 4-1: Impute the missing values found in the Categorical variable - employment*/
+PROC SQL;
+
+UPDATE LIB08908.TESTING_DS
+SET employment = ( SELECT to.employment AS employment
+					   FROM LIB08908.STAT_MS_TS_DS to
+					   WHERE to.number_of_loan_applicants eq ( SELECT MAX(ti.number_of_loan_applicants) AS highest_count
+  									    					   FROM LIB08908.STAT_MS_TS_DS ti ))
+  									    					   /*The above sub-program identifies which employment type has 
+  									    					   the highest number of applicants. */
+WHERE ( employment eq '' OR employment IS MISSING );  									    						
+  									   
+QUIT;
+
+/* STEP 4-2: (AI) Find the details of the loan applications who submitted their 
+loan application without providing any employment information. */
+TITLE1 'Find the details of the loan applications who submitted their loan';
+TITLE2 'application without providing any employment information.';
+FOOTNOTE '------END------';
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TESTING_DS ts 
+WHERE (ts.employment eq '' OR ts.employment IS MISSING );
+
+QUIT;
+
+/* STEP 4-3: (AI) Count the total number of the loan applicants who submitted their 
+loan application without providing any employment information. */
+TITLE1 'Count the total number of the loan applications who submitted their loan';
+TITLE2 'application without providing any employment information.';
+FOOTNOTE '---------END--------';
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TESTING_DS ts 
+WHERE (ts.employment eq '' OR ts.employment IS MISSING );
+QUIT;
+
+
+/*7.4 Impute the missing values found in the continuous variables inside the LIB08908.TESTING_DS*/
+
+/*7.4.1 Impute the missing value found in the continuous variables – loan_amount */
+
+/*STEP 1: Find the details of the loan applicants who submitted 
+their loan application without stating their loan_amount */
+TITLE1 'STEP 1: Find the details of the loan applicants who submitted';
+TITLE2 'their loan application without stating their loan_amount';
+FOOTNOTE '---------END--------';
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TESTING_DS ts
+WHERE ( ts.loan_amount eq . OR ts.loan_amount IS MISSING );
+
+QUIT;
+
+/*STEP 2: Count the number of applicants who submitted 
+their loan application without stating their loan_amount */
+TITLE1 'STEP 2: Count the number of applicants who submitted';
+TITLE2 'their loan application without stating their loan_amount';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TESTING_DS ts
+WHERE ( ts.loan_amount eq . OR ts.loan_amount IS MISSING );
+
+QUIT;
+
+/* STEP 3: Impute the missing values found inside the continuous variable - loan_amount */
+
+PROC STDIZE DATA = LIB08908.TESTING_DS REPONLY
+	METHOD= MEAN OUT = LIB08908.TESTING_DS;
+	VAR loan_amount;
+	
+QUIT;	
+
+/*STEP 3: Find the details of the loan applicants who submitted 
+their loan application without stating their loan_amount */
+TITLE1 'STEP 3: (AI) Find the details of the loan applicants who submitted';
+TITLE2 'their loan application without stating their loan_amount';
+FOOTNOTE '---------END--------';
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TESTING_DS ts
+WHERE ( ts.loan_amount eq . OR ts.loan_amount IS MISSING );
+QUIT;
+
+/*STEP 4: Count the number of applicants who submitted 
+their loan application without stating their loan_amount */
+TITLE1 'STEP 4: (AI) Count the number of applicants who submitted';
+TITLE2 'their loan application without stating their loan_amount';
+FOOTNOTE '---------END--------';
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TESTING_DS ts
+WHERE ( ts.loan_amount eq . OR ts.loan_amount IS MISSING );
+QUIT;
+
+
+/*7.4.2 Impute the missing value found in the continuous variables – loan-durantion */
+
+/*STEP 1: Find the details of the loan applicants who submitted 
+their loan application without stating their loan_duration */
+TITLE1 'STEP 1: Find the details of the loan applicants who submitted';
+TITLE2 'their loan application without stating their loan_duration';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TESTING_DS ts
+WHERE ( ts.loan_duration eq . OR ts.loan_duration IS MISSING );
+
+QUIT;
+
+/*STEP 2: Count the number of applicants who submitted 
+their loan application without stating their loan_duration */
+TITLE1 'STEP 2: Count the number of applicants who submitted';
+TITLE2 'their loan application without stating their loan_duration';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TESTING_DS ts
+WHERE ( ts.loan_duration eq . OR ts.loan_duration IS MISSING );
+
+QUIT;
+
+/* STEP 3: Impute the missing values found inside the continuous variable - loan_duration */
+
+PROC STDIZE DATA = LIB08908.TESTING_DS REPONLY
+	METHOD= MEAN OUT = LIB08908.TESTING_DS;
+	VAR loan_duration;
+	
+QUIT;	
+
+/*STEP 3-1: (AI) Find the details of the loan applicants who submitted 
+their loan application without stating their loan_duration */
+TITLE1 'Find the details of the loan applicants who submitted';
+TITLE2 'their loan application without stating their loan_duration';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT *
+FROM LIB08908.TESTING_DS ts
+WHERE ( ts.loan_duration eq . OR ts.loan_duration IS MISSING );
+
+QUIT;
+
+/*STEP 3-2: (AI) Count the number of applicants who submitted 
+their loan application without stating their loan_duration */
+TITLE1 'Count the number of applicants who submitted';
+TITLE2 'their loan application without stating their loan_duration';
+FOOTNOTE '---------END--------';
+
+PROC SQL;
+
+SELECT COUNT(*) Label = 'Number of Loan Applicants'
+FROM LIB08908.TESTING_DS ts
+WHERE ( ts.loan_duration eq . OR ts.loan_duration IS MISSING );
+
+QUIT;
+
+
+/* 8) Model creation and prediction */
+
+/* 8.1 Model creation using the logistic reg algorithm and prediction */
+
+PROC LOGISTIC DATA = LIB08908.TRAINING_DS OUTMODEL = LIB08908.TRAINING_DS_LR_MODEL;
+CLASS /* The class list below entails all the categorical variables */
+	employment
+	gender
+	marital_status
+	loan_location
+	loan_history
+	family_members
+	qualification
+	;
+MODEL loan_approval_status = /* loan_approval_status is a dependent variable */	
+	/* List below all the categorical and continuous variables ( independent variables) */
+	employment
+	gender
+	marital_status
+	loan_location
+	loan_history
+	family_members
+	qualification
+	loan_duration
+	loan_amount 
+	candidate_income
+	guarantee_income
+	;
+	
+OUTPUT OUT = LIB08908.TRAINING_OUT_DS P = PPRED_PROB;
+
+RUN;	
+
+/* 8.2 Prediction of the loan approval statuses using the logistic regression model */
+
+PROC LOGISTIC INMODEL = LIB08908.TRAINING_DS_LR_MODEL; /* This is the logistic regression model created in 8.1 */
+	SCORE DATA = LIB08908.TESTING_DS /* Testing dataset*/
+	OUT = LIB08908.TESTING_LAS_PREDICTED_DS; /* Location of output dataset */
+
+QUIT;	
+
+/* 9.1.1 Generation of a simple summary report of loan applicants at a specified date */
+
+/*Report generation procedure starts here */
+PROC PRINT DATA = LIB08908.TESTING_LAS_PREDICTED_DS n = 'Number of Applicants: '
+	noobs label;
+var sme_loan_id_no gender loan_amount;
+
+label gender = 'Gender Name';
+label sme_loan_id_no = 'Unique ID';
+label loan_amount = 'Loan Amount (RM)';
+TITLE 'Summary Report of loan applicants as of  '&SYSDATE;
+RUN;
+/*Report generation procedure ends here */	
+	
+
+/*  9.1.2 Generation of a report using SAS ODS - Output Delivery/Display System
+	This report displays the details of the loan approval status predicted */
+	
+ODS	HTML CLOSE;
+ODS PDF ClOSE;
+/* Determine the physical location of pdf */
+ODS PDF FILE = "/home/u64259409/DAP_FT_SEP_2025_PROJECT/loan_approval_status_APU.pdf";
+OPTIONS NODATE;
+TITLE1 'Predicted Bank Loan Approval Status';
+TITLE2 'SME,APU';
+
+/*Generating the report*/
+PROC REPORT DATA = LIB08908.TESTING_LAS_PREDICTED_DS NOWINDOWS;
+
+BY sme_loan_id_no;
+DEFINE sme_loan_id_no / GROUP 'Unique Id';
+DEFINE gender / GROUP 'Gender Name';
+DEFINE marital_status / GROUP 'Marriage Status' ;
+DEFINE family_members / GROUP 'Number of Family Members';
+DEFINE qualification / GROUP 'Education Qualification';
+DEFINE employment / GROUP 'Applicant Is Employed';
+DEFINE candidate_income / GROUP "Applicant's Monthly Income" ;
+DEFINE guarantee_income / GROUP "Co-Applicant's Monthly Income" ;
+DEFINE loan_amount/ GROUP 'Loan Amount';
+DEFINE loan_duration/ GROUP 'Loan Duration';
+DEFINE loan_history/ GROUP 'Loan History';
+DEFINE loan_location/ GROUP 'Loan Location';
+FOOTNOTE '------End of Report------';
+
+RUN;
+ 
+/* 9.2.1 Creation of a complex SAS report using SAS macros
+		 with customized messages for each loan applicant. */
+
+/*** This section initiates the report generation procedure 
+Using LET statements to define variables, SAS macros, and 
+IF–ELSE–THEN conditions to create a complex report (1) ***/
+
+/* SAS Macro starts here */
+OPTIONS MCOMPILENOTE = ALL;
+%MACRO MACRO_LASP_LOC_WISE_REPORT();
+%LET ploan_location = "CITY";
+%IF &ploan_location = "CITY" %THEN
+	%DO;
+	%IF %SYSFUNC (EXIST (LIB08908.LASP_CITY_DS)) % THEN
+		%DO;
+			PROC SQL;
+				DROP TABLE LIB08908.LASP_CITY_DS;
+			RUN;
+		%END; /* This is to identify and remove the previous version of this DS if it exists*/	
+		PROC SQL;
+			CREATE TABLE LIB08908.LASP_CITY_DS AS
+			SELECT l.sme_loan_id_no AS Unique_Loan_Id, /* User defined variable */
+			CASE WHEN UPCASE(l.gender) = 'MALE' THEN 'M'
+				 WHEN UPCASE(l.gender) = 'FEMALE' THEN 'F'
+				 ELSE 'N/A'
+			END AS Gender_Short_Name, /* User defined variable */
+			CASE WHEN UPCASE(l.gender) = 'MALE' AND l.loan_history = 1 THEN
+					 'He is a reliable applicant who has consistently repaid his previous loan(s) on time.'
+				 WHEN UPCASE(l.gender) = 'MALE' AND l.loan_history = 0 THEN
+					 'He is not a reliable applicant, as he has not consistently repaid his previous loan(s) on time.'		
+			     WHEN UPCASE(l.gender) = 'FEMALE' AND l.loan_history = 1 THEN
+					 'She is a reliable applicant who has consistently repaid her previous loan(s) on time.' 
+				 WHEN UPCASE(l.gender) = 'FEMALE' AND l.loan_history = 0 THEN
+					 'She is not a reliable applicant, as she has not consistently repaid his previous loan(s) on time.'	 
+				 ELSE 'N/A'
+			END AS Remarks /* User defined varaible */	
+			FROM LIB08908.TESTING_LAS_PREDICTED_DS l
+			WHERE UPCASE(l.loan_location) = &ploan_location;
+		RUN;
+		TITLE1 'Complex Report as of ' &SYSDATE;
+		TITLE2 'Details of the Loan Applicants from ' &ploan_location;
+		PROC PRINT DATA = LIB08908.LASP_CITY_DS;
+			VAR Unique_Loan_Id Gender_short_Name Remarks;
+		RUN;
+%END; /* This END is for CITY */
+%MEND MACRO_LASP_LOC_WISE_REPORT;
+/* SAS Macro ends here */
+/* SAS Macro ends here */
+/*Call the macro */
+%MACRO_LASP_LOC_WISE_REPORT();	
+
+/* The report generation procedure begins here, 
+   employing the LET statement for variable definition, SAS macros,
+   parameters, and IF–ELSE–IF–THEN–DO conditional logic 
+   to produce a complex report (2). */
+
+/* SAS Macro starts here */
+OPTIONS MCOMPILENOTE=ALL;
+%MACRO MACRO_LASP_LOC_WISE_REPORT(ploan_location);
+%IF &ploan_location = "CITY" %THEN	
+	%DO;
+	%IF %SYSFUNC(EXIST(LIB08908.LASP_CITY_DS)) %THEN
+		%DO;
+			PROC SQL;
+				DROP TABLE LIB08908.LASP_CITY_DS;
+			RUN;
+		%END; /* THis step is to identify and remove the previous version of this DS if it exists */
+		PROC SQL;
+			CREATE TABLE LIB08908.LASP_CITY_DS AS 
+			SELECT l.sme_loan_id_no AS Unique_Loan_Id, /* User defined variable */
+			CASE WHEN UPCASE(l.gender) = 'MALE' Then 'M'
+				 WHEN UPCASE(l.gender) = 'FEMALE' THEN 'F'	
+				 ELSE 'N/A'
+			END AS Gender_Short_Name, /* User defined variable*/ 
+			CASE WHEN UPCASE(l.gender) = 'MALE' AND l.loan_history = 1 THEN
+						'He is a reliable applicant who has consistently repaid his previous loan(s) on time.'
+				 WHEN UPCASE(l.gender) = 'MALE' AND l.loan_history = 0 THEN
+						'He is not a reliable applicant, as he has not consistently repaid his previous loan(s) on time.'
+				 WHEN UPCASE(l.gender) = 'FEMALE' AND l.loan_history = 1 THEN
+						'She is a reliable applicant who has consistently repaid her previous loan(s) on time.'
+				 WHEN UPCASE(l.gender) = 'FEMALE' AND l.loan_history = 0 THEN
+						'She is not a reliable applicant, as she has not consistently repaid his previous loan(s) on time.'
+				 ELSE 'N/A'
+			END AS Remarks /* User defined variable */
+			FROM LIB08908.TESTING_LAS_PREDICTED_DS l
+			WHERE UPCASE(l.loan_location) = &ploan_location;
+		RUN;
+		TITLE1 'Complex Report as of ' &Sysdate;
+		TITLE2 'Details of the Loan Applicants from ' &ploan_location;
+		PROC PRINT DATA = LIB08908.LASP_CITY_DS;
+			VAR Unique_Loan_Id Gender_Short_Name Remarks;
+		RUN;
+%END; /* This end is for CITY */
+
+/* %IF condition evaluates the macro variable &ploan_location. 
+When its value equals "VILLAGE", the %THEN %DO block is triggered
+ and the associated macro statements are executed. */
+
+%IF &ploan_location = "VILLAGE" %THEN	
+	%DO;
+	%IF %SYSFUNC(EXIST(LIB08908.LASP_VILLAGE_DS)) %THEN
+		%DO;
+			PROC SQL;
+				DROP TABLE LIB08908.LASP_VILLAGE_DS;
+			RUN;
+		%END; /* This step is to identify and remove the previous version of this DS if it exists */
+		PROC SQL;
+			CREATE TABLE LIB08908.LASP_VILLAGE_DS AS 
+			SELECT l.sme_loan_id_no AS Unique_Loan_Id, /* User defined variable */
+			CASE WHEN UPCASE(l.gender) = 'MALE' Then 'M'
+				 WHEN UPCASE(l.gender) = 'FEMALE' THEN 'F'	
+				 ELSE 'N/A'
+			END AS Gender_Short_Name, /* User defined variable*/ 
+			CASE WHEN UPCASE(l.gender) = 'MALE' AND l.loan_history = 1 THEN
+						'He is a reliable applicant who has consistently repaid his previous loan(s) on time.'
+				 WHEN UPCASE(l.gender) = 'MALE' AND l.loan_history = 0 THEN
+						'He is not a reliable applicant, as he has not consistently repaid his previous loan(s) on time.'
+				 WHEN UPCASE(l.gender) = 'FEMALE' AND l.loan_history = 1 THEN
+						'She is a reliable applicant who has consistently repaid her previous loan(s) on time.'
+				 WHEN UPCASE(l.gender) = 'FEMALE' AND l.loan_history = 0 THEN
+						'She is not a reliable applicant, as she has not consistently repaid his previous loan(s) on time.'
+				 ELSE 'N/A'
+			END AS Remarks /* User defined variable */
+			FROM LIB08908.TESTING_LAS_PREDICTED_DS l
+			WHERE UPCASE(l.loan_location) = &ploan_location;
+		RUN;
+		TITLE1 'Complex Report as of ' &SYSDATE;
+		TITLE2 'Details of the Loan Applicants from ' &ploan_location;
+		PROC PRINT DATA = LIB08908.LASP_VILLAGE_DS;
+			VAR Unique_Loan_Id Gender_Short_Name Remarks;
+		RUN;
+%END; /* This end is for VILLAGE */
+
+/*  %IF condition evaluates the macro variable &ploan_location. 
+When its value equals "TOWN", the %THEN %DO block is triggered 
+, and the associated macro statements are executed.*/
+ 
+%IF &ploan_location = "TOWN" %THEN	
+	%DO;
+	%IF %SYSFUNC(EXIST(LIB08908.LASP_TOWN_DS)) %THEN
+		%DO;
+			PROC SQL;
+				DROP TABLE LIB08908.LASP_TOWN_DS;
+			RUN;
+		%END; /* THis step is to identify and remove the previous version of this DS if it exists */
+		PROC SQL;
+			CREATE TABLE LIB08908.LASP_TOWN_DS AS 
+			SELECT l.sme_loan_id_no AS Unique_Loan_Id, /* User defined variable */
+			CASE WHEN UPCASE(l.gender) = 'MALE' Then 'M'
+				 WHEN UPCASE(l.gender) = 'FEMALE' THEN 'F'	
+				 ELSE 'N/A'
+			END AS Gender_Short_Name, /* User defined variable*/ 
+			CASE WHEN UPCASE(l.gender) = 'MALE' AND l.loan_history = 1 THEN
+						'He is a reliable applicant who has consistently repaid his previous loan(s) on time.'
+				 WHEN UPCASE(l.gender) = 'MALE' AND l.loan_history = 0 THEN
+						'He is not a reliable applicant, as he has not consistently repaid his previous loan(s) on time.'
+				 WHEN UPCASE(l.gender) = 'FEMALE' AND l.loan_history = 1 THEN
+						'She is a reliable applicant who has consistently repaid her previous loan(s) on time.'
+				 WHEN UPCASE(l.gender) = 'FEMALE' AND l.loan_history = 0 THEN
+						'She is not a reliable applicant, as she has not consistently repaid his previous loan(s) on time.'
+				 ELSE 'N/A'
+			END AS Remarks /* User defined variable */
+			FROM LIB08908.TESTING_LAS_PREDICTED_DS l
+			WHERE UPCASE(l.loan_location) = &ploan_location;
+		RUN;
+		TITLE1 'Complex Report as of ' &SYSDATE;
+		TITLE2 'Details of the Loan Applicants from ' &ploan_location;
+		PROC PRINT DATA = LIB08908.LASP_TOWN_DS;
+			VAR Unique_Loan_Id Gender_Short_Name Remarks;
+		RUN;
+%END; /* This end is for TOWN */
+ 
+%MEND MACRO_LASP_LOC_WISE_REPORT;
+/* SAS Macro ends here */
+ 
+/* Call the SAS macro */
+%MACRO_LASP_LOC_WISE_REPORT("CITY");
+%MACRO_LASP_LOC_WISE_REPORT("VILLAGE");
+%MACRO_LASP_LOC_WISE_REPORT("TOWN");
+
+
+/***********************************************
+A bar chart is generated to illustrate 
+	the breakdown of gender categories by loan location.
+************************************************/
+TITLE 'Gender breakdown by loan location';
+
+PROC SGPLOT DATA = LIB08908.TESTING_LAS_PREDICTED_DS;
+
+VBAR gender / GROUP = loan_location GROUPDISPLAY = CLUSTER;
+Label gender = 'Gender';
+Label loan_location = 'Loan Location';
+
+RUN;		
+
+/*************************************************
+A pie chart is generated to illustrate the distribution of predicted loan approval statuses, 
+	where each slice of the circle represents a different category 
+	and is displayed in a distinct color.
+********************************************/
+TITLE 'Predicted Loan Approval Status';
+
+PROC GCHART DATA = LIB08908.TESTING_LAS_PREDICTED_DS;
+
+PIE3D I_LOAN_APPROVAL_STATUS;
+
+RUN;
+
+		
+
+	
+
+
+
+
+
+
+
+
